@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -28,6 +27,7 @@ import static com.example.ceep.ui.activity.NotaActivityConstanties.POSICAO_INVAL
 public class ListaNotasActivity extends AppCompatActivity {
 
     public static final String CHAVE_NOTA = "nota";
+    public static final String TITULO_APPBAR = "Notas";
     private ListaNotasAdapter adapter;
 
     @Override
@@ -37,6 +37,7 @@ public class ListaNotasActivity extends AppCompatActivity {
         List<Nota> todasNotas = pegaTodasNotas();
         configuraRecyclerView(todasNotas);
         configuraBotaoInsereNota();
+        setTitle(TITULO_APPBAR);
     }
 
     private void configuraBotaoInsereNota() {
@@ -58,10 +59,6 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     private List<Nota> pegaTodasNotas() {
         NotaDAO dao = new NotaDAO();
-        for (int i = 0; i < 10; i++) {
-            dao.insere(new Nota("Título" + (i + 1),
-                    "Descricao" + (i + 1)));
-        }
         return dao.todos();
     }
 
@@ -83,10 +80,6 @@ public class ListaNotasActivity extends AppCompatActivity {
                 if (ehPosicaoValida(posicaoRecebida)) {
                     //Salvando no banco de dados
                     altera(notaRecebida, posicaoRecebida);
-                } else {
-                    Toast.makeText(this,
-                            "Ocorreu um problema na alteração da nota",
-                            Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -122,7 +115,7 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     //    Tem nota? código busca
     private boolean temNota(Intent data) {
-        return data.hasExtra(CHAVE_NOTA);
+        return data != null && data.hasExtra(CHAVE_NOTA);
     }
 
     private boolean resultadoOk(int resultCode) {

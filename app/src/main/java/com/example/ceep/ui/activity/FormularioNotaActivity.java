@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -20,6 +19,8 @@ import static com.example.ceep.ui.activity.NotaActivityConstanties.TITULO_APPBAR
 public class FormularioNotaActivity extends AppCompatActivity {
 
 
+    private int posicaoRecebida;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,16 +28,16 @@ public class FormularioNotaActivity extends AppCompatActivity {
         setTitle(TITULO_APPBAR);
 
         Intent dadosRecebidos = getIntent();
-        if (dadosRecebidos.hasExtra(CHAVE_NOTA)) ;
-        Nota notaRecebida = (Nota) dadosRecebidos
-                .getSerializableExtra(CHAVE_NOTA);
+        if (dadosRecebidos.hasExtra(CHAVE_NOTA) && dadosRecebidos.hasExtra("posicao")) {
+            Nota notaRecebida = (Nota) dadosRecebidos
+                    .getSerializableExtra(CHAVE_NOTA);
+            posicaoRecebida = dadosRecebidos.getIntExtra("posicao", -1);
+            TextView titulo = findViewById(R.id.formulario_nota_titulo);
+            titulo.setText(notaRecebida.getTitulo());
 
-        TextView titulo = findViewById(R.id.formulario_nota_titulo);
-        titulo.setText(notaRecebida.getTitulo());
-
-        TextView descricao = findViewById(R.id.formulario_nota_descricao);
-        descricao.setText(notaRecebida.getDescricao());
-
+            TextView descricao = findViewById(R.id.formulario_nota_descricao);
+            descricao.setText(notaRecebida.getDescricao());
+        }
     }
 
     @Override
@@ -58,6 +59,7 @@ public class FormularioNotaActivity extends AppCompatActivity {
     private void retornaNota(Nota nota) {
         Intent resultadoInsercao = new Intent();
         resultadoInsercao.putExtra(CHAVE_NOTA, nota);
+        resultadoInsercao.putExtra("posicao", posicaoRecebida);
         setResult(CODIGO_RESULTADO_NOTA_CRIADA, resultadoInsercao);
     }
 

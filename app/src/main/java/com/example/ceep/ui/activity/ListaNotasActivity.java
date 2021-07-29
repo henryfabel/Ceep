@@ -13,7 +13,7 @@ import com.example.ceep.R;
 import com.example.ceep.dao.NotaDAO;
 import com.example.ceep.model.Nota;
 import com.example.ceep.ui.recyclerview.adapter.ListaNotasAdapter;
-import com.example.ceep.ui.recyclerview.adapter.OnItemClickListener;
+import com.example.ceep.ui.recyclerview.adapter.listener.OnItemClickListener;
 
 import java.util.List;
 
@@ -31,7 +31,6 @@ public class ListaNotasActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_notas);
         List<Nota> todasNotas = pegaTodasNotas();
         configuraRecyclerView(todasNotas);
-
         configuraBotaoInsereNota();
     }
 
@@ -54,8 +53,11 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     private List<Nota> pegaTodasNotas() {
         NotaDAO dao = new NotaDAO();
-        List<Nota> todasNotas = dao.todos();
-        return todasNotas;
+        for (int i = 0; i < 10; i++){
+            dao.insere(new Nota("Título" + (i+1),
+                    "Descricao" + (i + 1)));
+        }
+        return dao.todos();
     }
 
     @Override
@@ -68,7 +70,6 @@ public class ListaNotasActivity extends AppCompatActivity {
     }
 
     private void adiciona(Nota nota) {
-        new NotaDAO().insere(nota);
         adapter.adiciona(nota);
     }
 
@@ -111,9 +112,9 @@ public class ListaNotasActivity extends AppCompatActivity {
         listaNotas.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick() {
+            public void onItemClick(Nota nota) {
                 Toast.makeText(ListaNotasActivity.this,
-                        "viewHolder na Activity",
+                        nota.getTitulo(),
                         Toast.LENGTH_SHORT).show();
             }
         });

@@ -15,6 +15,7 @@ import com.example.ceep.model.Nota;
 import com.example.ceep.ui.recyclerview.adapter.ListaNotasAdapter;
 import com.example.ceep.ui.recyclerview.adapter.listener.OnItemClickListener;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static com.example.ceep.ui.activity.NotaActivityConstanties.CODIGO_RESULTADO_NOTA_CRIADA;
@@ -47,14 +48,14 @@ public class ListaNotasActivity extends AppCompatActivity {
     private void vaiParaFormularioNotaActivity() {
         Intent iniciaFormularioNota =
                 new Intent(ListaNotasActivity.this,
-                    FormularioNotaActivity.class);
+                        FormularioNotaActivity.class);
         startActivityForResult(iniciaFormularioNota, REQUISICAO_INSERE_NOTA);
     }
 
     private List<Nota> pegaTodasNotas() {
         NotaDAO dao = new NotaDAO();
-        for (int i = 0; i < 10; i++){
-            dao.insere(new Nota("Título" + (i+1),
+        for (int i = 0; i < 10; i++) {
+            dao.insere(new Nota("Título" + (i + 1),
                     "Descricao" + (i + 1)));
         }
         return dao.todos();
@@ -62,14 +63,22 @@ public class ListaNotasActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(ehResultadoComNota(requestCode, resultCode, data)) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (ehResultadoComNota(requestCode, resultCode, data)) {
             Nota notaRecebida = (Nota) data.getSerializableExtra("nota");
             adiciona(notaRecebida);
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 2 && resultCode == CODIGO_RESULTADO_NOTA_CRIADA && hasNota(data)) {
+            Nota notaRecebida = (Nota) data.getSerializableExtra(CHAVE_NOTA);
+            Toast.makeText(this,
+                    notaRecebida.getTitulo(),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void adiciona(Nota nota) {
+        new NotaDAO().insere(nota);
         adapter.adiciona(nota);
     }
 
@@ -113,11 +122,11 @@ public class ListaNotasActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(Nota nota) {
-                Toast.makeText(ListaNotasActivity.this,
-                        nota.getTitulo(),
-                        Toast.LENGTH_SHORT).show();
+                Intent abreFormularioComNota = new Intent(ListaNotasActivity.this,
+                        FormularioNotaActivity.class);
+                abreFormularioComNota.putExtra(CHAVE_NOTA, nota);
+                startActivityForResult(abreFormularioComNota, 2);
             }
         });
     }
-
 }

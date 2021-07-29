@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,13 +20,23 @@ import static com.example.ceep.ui.activity.NotaActivityConstanties.TITULO_APPBAR
 public class FormularioNotaActivity extends AppCompatActivity {
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_nota);
-
         setTitle(TITULO_APPBAR);
+
+        Intent dadosRecebidos = getIntent();
+        if (dadosRecebidos.hasExtra(CHAVE_NOTA)) ;
+        Nota notaRecebida = (Nota) dadosRecebidos
+                .getSerializableExtra(CHAVE_NOTA);
+
+        TextView titulo = findViewById(R.id.formulario_nota_titulo);
+        titulo.setText(notaRecebida.getTitulo());
+
+        TextView descricao = findViewById(R.id.formulario_nota_descricao);
+        descricao.setText(notaRecebida.getDescricao());
+
     }
 
     @Override
@@ -35,7 +47,7 @@ public class FormularioNotaActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(ehMenuSalvaNota(item)){
+        if (ehMenuSalvaNota(item)) {
             Nota notaCriada = criaNota();
             retornaNota(notaCriada);
             finish();

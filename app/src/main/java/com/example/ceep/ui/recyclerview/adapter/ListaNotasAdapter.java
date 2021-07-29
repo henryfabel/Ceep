@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -70,11 +69,11 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
             super(itemView);
             titulo = itemView.findViewById(R.id.item_nota_titulo);
             descricao = itemView.findViewById(R.id.item_nota_descricao);
-            itemView.setOnClickListener(new View.OnClickListener(){
-               @Override
-               public void onClick (View view){
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     onItemClickListener.onItemClick(nota, getAbsoluteAdapterPosition());
-               }
+                }
             });
         }
 
@@ -90,7 +89,7 @@ public class ListaNotasAdapter extends RecyclerView.Adapter<ListaNotasAdapter.No
         }
     }
 
-    public void adiciona (Nota nota) {
+    public void adiciona(Nota nota) {
         notas.add(nota);
         notifyDataSetChanged();
     }
